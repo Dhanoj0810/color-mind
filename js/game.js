@@ -1,12 +1,14 @@
 class ColorGame {
   constructor() {
-    this.colors = [["black", "white"]];
-    this.colorHistory = new Set();
+    this.colors = { black: "white" };
+    this.presentColors = {};
     this.point = 0;
   }
 
   generateColorCombination() {
-    return ["black", "white"];
+    const color = Object.keys(this.colors).join("");
+
+    return [color, this.colors[color]];
   }
 
   updatePoint() {
@@ -15,6 +17,28 @@ class ColorGame {
 
   getCurrentPoint() {
     return this.point;
+  }
+
+  addPresentColor([key, value]) {
+    this.presentColors[key] = value;
+  }
+
+  #findKey(value) {
+    const combinations = Object.entries(this.presentColors);
+    const key = combinations.reduce(
+      (key, combination) => (combination[1] === value ? combination[0] : key),
+      ""
+    );
+
+    return key;
+  }
+
+  removePresentColor(color) {
+    const key = this.#findKey(color);
+
+    delete this.presentColors[key];
+
+    return key;
   }
 }
 
@@ -28,8 +52,7 @@ const addElement = (parent, [bgColor, textColor]) => {
 };
 
 const removeElement = (className) => {
-  const div = document.querySelector(`.${className}`).remove();
-  console.log(div);
+  document.querySelector(`.${className}`).remove();
 };
 
 const startGame = (e) => {
@@ -39,10 +62,12 @@ const startGame = (e) => {
 
   const colorCombination = gameSession.generateColorCombination();
   addElement(arena, colorCombination);
+  gameSession.addPresentColor(colorCombination);
 
   input.addEventListener("change", (e) => {
-    if (colorCombination[1] === input.value) {
-      removeElement(colorCombination[0]);
+    if (Object.values(gameSession.presentColors).includes(input.value)) {
+      const className = gameSession.removePresentColor(input.value);
+      removeElement(className);
       gameSession.updatePoint();
       console.log(gameSession.getCurrentPoint());
     }
