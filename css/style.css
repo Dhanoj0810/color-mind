@@ -14,12 +14,12 @@ body {
   justify-content: center;
 }
 
-#interface {
+#arena {
   margin-top: 10px;
   margin-bottom: 10px;
   width: 300px;
   height: 60vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: lightblue;
   padding: 20px;
   border-radius: 10px;
   display: flex;
@@ -47,4 +47,11 @@ button {
 button:hover {
   background-color: black;
   color: ghostwhite;
+}
+
+.black {
+  width: 100px;
+  height: 100px;
+  background-color: black;
+  color: white;
 }
